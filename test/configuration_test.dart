@@ -108,4 +108,24 @@ Future<void> main([List<String>? args]) async {
     expect(() => realm.write(() {}), throws<RealmException>("Can't perform transactions on read-only Realms."));
     realm.close();
   });
+
+  test('Configuration.operator== same config', () {
+    final config = Configuration([Dog.schema, Person.schema]);
+    final r1 = Realm(config);
+    final r2 = Realm(config);
+
+    expect(r1.config, r2.config);
+    r1.close();
+    r2.close();
+  });
+
+  test('ReaConfigurationlm.operator== different config', () {
+    var config = Configuration([Dog.schema, Person.schema]);
+    final r1 = Realm(config);
+    config = Configuration([Dog.schema, Person.schema]);
+    final r2 = Realm(config);
+    expect(r1.config, isNot(r2.config));
+    r1.close();
+    r2.close();
+  });
 }

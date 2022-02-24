@@ -97,6 +97,14 @@ class Configuration {
   /// The realm file must already exists at [path]
   bool get isReadOnly => realmCore.getConfigReadOnly(this);
   set isReadOnly(bool value) => realmCore.setConfigReadOnly(this, value);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! Configuration) return false;
+    bool areEquals = realmCore.configurationEquals(this, other);
+    return areEquals;
+  }
 }
 
 /// A collection of properties describing the underlying schema of a [RealmObject].

@@ -584,7 +584,7 @@ Future<void> main([List<String>? args]) async {
 
     expect(r1, r1);
     expect(r2, r2);
-    expect(r1, r2);
+    expect(r1, isNot(r2));
 
     r1.write(() {
       r1.add(Person('Kasper'));
@@ -602,7 +602,7 @@ Future<void> main([List<String>? args]) async {
     final r1 = Realm(config);
     final r2 = Realm(config);
 
-    expect(r1, r2);
+    expect(r1, isNot(r2));
     r1.close();
     r2.close();
   });

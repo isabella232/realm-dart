@@ -239,9 +239,6 @@ class Realm {
     if (identical(this, other)) return true;
     if (other is! Realm) return false;
     bool areEquals = realmCore.realmEquals(this, other);
-    if (!areEquals) {
-      areEquals = realmCore.configurationEquals(config, other.config);
-    }
     return areEquals;
   }
 }
@@ -279,7 +276,7 @@ class Scheduler {
 extension RealmInternal on Realm {
   RealmHandle get handle => _handle;
   Scheduler get scheduler => _scheduler;
-  
+
   RealmObject createObject(Type type, RealmObjectHandle handle) {
     RealmMetadata metadata = _getMetadata(type);
 
