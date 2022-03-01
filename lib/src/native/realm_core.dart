@@ -518,10 +518,16 @@ class _RealmCore {
   bool _equals<T extends NativeType>(Handle<T> first, Handle<T> second) {
     return _realmLib.realm_equals(first._pointer.cast(), second._pointer.cast());
   }
+
   bool objectEquals(RealmObject first, RealmObject second) => _equals(first.handle, second.handle);
   bool realmEquals(Realm first, Realm second) => _equals(first.handle, second.handle);
   bool configurationEquals(Configuration first, Configuration second) => _equals(first.handle, second.handle);
   
+  RealmResultsHandle resultsSnapshot(RealmResults results) {
+    final resultsPointer = _realmLib.invokeGetPointer(() => _realmLib.realm_results_snapshot(results.handle._pointer));
+    return RealmResultsHandle._(resultsPointer);
+  }
+
   bool objectIsValid(RealmObject object) {
     return _realmLib.realm_object_is_valid(object.handle._pointer);
   }
