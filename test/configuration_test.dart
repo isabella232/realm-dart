@@ -70,6 +70,26 @@ Future<void> main([List<String>? args]) async {
     expect(config.schemaVersion, equals(3));
   });
 
+  test('Configuration.operator== same config', () {
+    final config = Configuration([Dog.schema, Person.schema]);
+    final r1 = Realm(config);
+    final r2 = Realm(config);
+
+    expect(r1.config, r2.config);
+    r1.close();
+    r2.close();
+  });
+
+  test('ReaConfigurationlm.operator== different config', () {
+    var config = Configuration([Dog.schema, Person.schema]);
+    final r1 = Realm(config);
+    config = Configuration([Dog.schema, Person.schema]);
+    final r2 = Realm(config);
+    expect(r1.config, isNot(r2.config));
+    r1.close();
+    r2.close();
+  });
+  
   test('Configuration readOnly - opening non existing realm throws', () {
     Configuration config = Configuration([Car.schema], readOnly: true);
     expect(() => Realm(config), throws<RealmException>("at path '${config.path}' does not exist"));
@@ -108,24 +128,27 @@ Future<void> main([List<String>? args]) async {
     expect(() => realm.write(() {}), throws<RealmException>("Can't perform transactions on read-only Realms."));
     realm.close();
   });
-
-  test('Configuration.operator== same config', () {
-    final config = Configuration([Dog.schema, Person.schema]);
-    final r1 = Realm(config);
-    final r2 = Realm(config);
-
-    expect(r1.config, r2.config);
-    r1.close();
-    r2.close();
+  
+  test('Configuration inMemory - no files after closing realm', () {
+    Configuration config = Configuration([Car.schema], inMemory: true);
+    var realm = Realm(config);
+    realm.write(() => realm.add(Car('Tesla')));
+    realm.close();
+    expect(Realm.existsSync(config.path), false);
   });
 
-  test('ReaConfigurationlm.operator== different config', () {
-    var config = Configuration([Dog.schema, Person.schema]);
-    final r1 = Realm(config);
-    config = Configuration([Dog.schema, Person.schema]);
-    final r2 = Realm(config);
-    expect(r1.config, isNot(r2.config));
-    r1.close();
-    r2.close();
+  test('Configuration inMemory can not be readOnly', () {
+    Configuration config = Configuration([Car.schema], inMemory: true);
+    var realm = Realm(config);
+
+    config.isReadOnly = true;
+    expect(() => Realm(config), throws<RealmException>("Realm at path '${config.path}' already opened with different read permissions"));
+    realm.close();
+  });
+  
+  test('Configuration - FIFO files fallback path', () {
+    Configuration config = Configuration([Car.schema], fifoFilesFallbackPath: "./fifo_folder");
+    var realm = Realm(config);
+    realm.close();
   });
 }
