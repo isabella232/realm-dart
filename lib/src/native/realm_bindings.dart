@@ -964,6 +964,40 @@ class RealmLibrary {
       _realm_config_get_fifo_pathPtr.asFunction<
           ffi.Pointer<ffi.Int8> Function(ffi.Pointer<realm_config_t>)>();
 
+  /// If 'cached' is false, always return a new Realm instance.
+  void realm_config_set_cached(
+    ffi.Pointer<realm_config_t> arg0,
+    bool cached,
+  ) {
+    return _realm_config_set_cached(
+      arg0,
+      cached ? 1 : 0,
+    );
+  }
+
+  late final _realm_config_set_cachedPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Pointer<realm_config_t>,
+              ffi.Uint8)>>('realm_config_set_cached');
+  late final _realm_config_set_cached = _realm_config_set_cachedPtr
+      .asFunction<void Function(ffi.Pointer<realm_config_t>, int)>();
+
+  /// Check if realms are cached
+  bool realm_config_get_cached(
+    ffi.Pointer<realm_config_t> arg0,
+  ) {
+    return _realm_config_get_cached(
+          arg0,
+        ) !=
+        0;
+  }
+
+  late final _realm_config_get_cachedPtr = _lookup<
+          ffi.NativeFunction<ffi.Uint8 Function(ffi.Pointer<realm_config_t>)>>(
+      'realm_config_get_cached');
+  late final _realm_config_get_cached = _realm_config_get_cachedPtr
+      .asFunction<int Function(ffi.Pointer<realm_config_t>)>();
+
   /// Create a custom scheduler object from callback functions.
   ///
   /// @param userdata Pointer passed to all callbacks.
