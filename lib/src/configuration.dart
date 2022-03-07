@@ -87,8 +87,7 @@ class Configuration {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! Configuration) return false;
-    bool areEquals = realmCore.configurationEquals(this, other);
-    return areEquals;
+    return realmCore.configurationEquals(this, other);
   }
   
   /// The schema version used to open the [Realm]
